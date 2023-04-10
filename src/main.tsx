@@ -1,5 +1,4 @@
 import '@logseq/libs';
-import moment from 'moment';
 import TickTick from './ticktick/ticktick';
 import { NewTask, Subtask } from './ticktick/task';
 import { logseq as PackageLogseq } from '../package.json';
@@ -9,7 +8,7 @@ import { BlockEntity } from '@logseq/libs/dist/LSPlugin';
 const pluginId = PackageLogseq.id;
 const ticktick = new TickTick();
 
-const priorityToNum = (text: string): 0 | 1 | 3 | 5  => {
+const priorityToNum = (text: string): 0 | 1 | 3 | 5 => {
   const priority = text.match(/\[#([A-C])\]/);
   if (priority) {
     switch (priority[1]) {
@@ -27,11 +26,11 @@ const priorityToNum = (text: string): 0 | 1 | 3 | 5  => {
 const priorityToTag = (priority: 0 | 1 | 3 | 5 | undefined): string => {
   switch (priority) {
     case 5:
-      return ' [#A] ';
+      return '[#A] ';
     case 3:
-      return ' [#B] ';
+      return '[#B] ';
     case 1:
-      return ' [#C] ';
+      return '[#C] ';
   }
   return '';
 };
@@ -49,11 +48,15 @@ const parseTask = (text: string): NewTask => {
   };
 };
 
-const getTreeContent: (block: BlockEntity) => Promise<BlockEntity | null> = async (block) => {
-  const blockEntity = await logseq.Editor.getBlock(block.uuid, { includeChildren: true });
+const getTreeContent: (
+  block: BlockEntity,
+) => Promise<BlockEntity | null> = async (block) => {
+  const blockEntity = await logseq.Editor.getBlock(block.uuid, {
+    includeChildren: true,
+  });
 
   return blockEntity;
-}
+};
 
 const flattenTree: (node: BlockEntity) => BlockEntity[] = (node) => {
   const result: BlockEntity[] = [node];
@@ -65,40 +68,57 @@ const flattenTree: (node: BlockEntity) => BlockEntity[] = (node) => {
   }
 
   return result;
-}
+};
+
+const onSettingsChanged = async () => {
+  const settings = getTickTickSettings();
+  if (
+    settings.accessToken === '' &&
+    settings.accessCode !== '' &&
+    settings.clientId !== '' &&
+    settings.clientSecret !== '' &&
+    settings.redirectUri !== ''
+  ) {
+    const accessToken = await ticktick.getAccessToken(
+      settings.clientId,
+      settings.clientSecret,
+      settings.accessCode,
+      settings.redirectUri,
+    );
+    logseq.updateSettings({ access_token: accessToken });
+    logseq.UI.showMsg(
+      'TickTick access token updated successfully.',
+      'success',
+      {
+        timeout: 5000,
+      },
+    );
+  }
+
+  if (
+    settings.accessToken !== '' &&
+    settings.accessCode === '' &&
+    settings.clientId === '' &&
+    settings.clientSecret === '' &&
+    settings.redirectUri === ''
+  ) {
+    logseq.updateSettings({ access_token: '' });
+    logseq.UI.showMsg(
+      'TickTick access token cleared successfully.',
+      'success',
+      {
+        timeout: 5000,
+      },
+    );
+  }
+};
 
 const main: () => Promise<void> = async () => {
   console.info(`#${pluginId}: MAIN`);
 
   logseq.useSettingsSchema(settingsSchema);
+  logseq.onSettingsChanged(onSettingsChanged);
   let settings = getTickTickSettings();
-  
-  logseq.onSettingsChanged(() => {
-    settings = getTickTickSettings();
-
-    if (
-      settings.accessToken === '' &&
-      settings.accessCode !== '' &&
-      settings.clientId !== '' &&
-      settings.clientSecret !== '' &&
-      settings.redirectUri !== ''
-    ) {
-      ticktick
-        .getAccessToken(
-          settings.clientId,
-          settings.clientSecret,
-          settings.accessCode,
-          settings.redirectUri,
-        )
-        .then((accessToken) => {
-          logseq.updateSettings({ accessToken });
-          logseq.UI.showMsg(
-            'TickTick access token updated successfully.',
-            'success',
-          );
-        });
-    }
-  });
 
   if (settings.accessToken !== '') {
     ticktick.setAccessToken(settings.accessToken);
@@ -120,7 +140,7 @@ const main: () => Promise<void> = async () => {
     const flatContentTree = flattenTree(contentTree);
     console.log(flatContentTree);
 
-    const subtasks: Subtask[] = flatContentTree.slice(1).map(child => {
+    const subtasks: Subtask[] = flatContentTree.slice(1).map((child) => {
       const subtask: Subtask = {
         title: child.content.replace(/TODO/, '').replace(/\[#([A-C])\]/, ''),
       };
@@ -128,18 +148,20 @@ const main: () => Promise<void> = async () => {
     });
 
     const task = parseTask(flatContentTree[0]?.content || '');
-    task.items = subtasks; 
+    task.items = subtasks;
 
     try {
       const newTask = await ticktick.createTask(task);
       await logseq.Editor.updateBlock(
         blockEntity.uuid,
-        `TODO${priorityToTag(newTask.priority)}[${newTask.title}](${newTask.taskUrl})`,
+        `TODO ${priorityToTag(newTask.priority)}[${newTask.title}](${
+          newTask.taskUrl
+        })`,
       );
     } catch (error) {
       logseq.UI.showMsg('TickTick access token is invalid.', 'error');
     }
   });
-}
+};
 
 logseq.ready(main).catch(console.error);
