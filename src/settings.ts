@@ -2,46 +2,47 @@ import { SettingSchemaDesc } from '@logseq/libs/dist/LSPlugin';
 
 export const settingsSchema: SettingSchemaDesc[] = [
   {
-    key: 'ticktick.client_id',
+    key: 'client_id',
     type: 'string',
-    title: 'Client ID',
+    title: 'TickTick Client ID',
     description: 'TickTick Client ID',
     default: '',
   },
   {
-    key: 'ticktick.client_secret',
+    key: 'client_secret',
     type: 'string',
-    title: 'Client Secret',
+    title: 'TickTick Client Secret',
     description: 'TickTick Client Secret',
     default: '',
   },
   {
-    key: 'ticktick.redirect_uri',
+    key: 'redirect_uri',
     type: 'string',
-    title: 'Redirect URI',
+    title: 'TickTick Redirect URI',
     description: 'TickTick Redirect URI',
     default: '',
   },
   {
-    key: 'ticktick.code',
+    key: 'access_code',
     type: 'string',
-    title: 'Code',
+    title: 'TickTick Access Code',
     description: 'TickTick Code',
     default: 'https://mxschll.github.io/logseq-ticktick-plugin',
   },
 ];
 
 export const getTickTickSettings = () => {
-  const clientId = logseq.settings!['ticktick.client_id'];
-  const clientSecret = logseq.settings!['ticktick.client_secret'];
-  const redirectUri = logseq.settings!['ticktick.redirect_uri'];
-  const code = logseq.settings!['ticktick.code'];
-  const accessToken = logseq.settings!['ticktick.access_token'] || '';
+  const clientId = logseq.settings!['client_id'];
+  const clientSecret = logseq.settings!['client_secret'];
+  const redirectUri = logseq.settings!['redirect_uri'];
+  const accessCode = logseq.settings!['access_code'];
+  const accessToken = logseq.settings!['access_token'];
+
   return {
-    clientId,
-    clientSecret,
-    redirectUri,
-    code,
-    accessToken,
+    clientId: clientId || '',
+    clientSecret: clientSecret || '',
+    redirectUri: redirectUri || '',
+    accessCode: accessCode || '',
+    accessToken: accessToken || '',
   };
 };

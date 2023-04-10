@@ -33,6 +33,10 @@ class TickTick {
         return data.access_token;
     }
 
+    public setAccessToken(accessToken: string): void {
+        this.accessToken = accessToken;
+    }
+
     private generateTaskUrl(task: Task): string {
         return `${this.WEB_URL}/#p/${encodeURIComponent(task.projectId)}/task/${encodeURIComponent(task.id)}`;
     }
