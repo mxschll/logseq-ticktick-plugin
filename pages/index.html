@@ -1,12 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <title>TickTick OAuth Workflow</title>
 </head>
-<body>
 
+<body>
+    <main class="container">
+
+        <hgroup>
+            <h1>TickTick OAuth</h1>
+            <p>Currently, the regular way to get a TickTick access token for the Logseq plugin (OAuth Workflow) cannot
+                be used. This is because it requires a redirect to Logseq with a parameter, which is not working well at
+                the moment. Instead, you can use this page to generate the required credentials.</p>
+        </hgroup>
+        <div id="step-1">
+            <p>
+                To integrate the TickTick app with another application, you need to create a new app on the developer
+                platform.
+                Go to <a href="https://developer.ticktick.com/manage"
+                    target="_blank">https://developer.ticktick.com/manage</a> and create a new app, giving it a name and
+                description of your choice.
+                Edit the app and add this OAuth redirect URL:
+                <code>https://mxschll.github.io/logseq-ticktick-plugin</code>.
+                Then, copy the <b>Client ID</b> and <b>Client Secret</b> and paste them into the appropriate fields in
+                the form below and click on the Authorize button.
+            </p>
+            <form>
+                <div class="grid">
+
+                    <label for="client_id">
+                        TickTick Client ID
+                        <input type="text" name="client_id" id="client_id" placeholder="Client ID">
+
+                    </label>
+
+                    <label for="client_secret">
+                        TickTick Client Secret
+                        <input type="text" name="client_secret" id="client_secret" placeholder="Client Secret">
+                    </label>
+
+                    <input type="text" name="redirect_url" id="redirect_url" placeholder="Redirect URI"
+                        value="https://mxschll.github.io/logseq-ticktick-plugin" hidden>
+                </div>
+                <small>We'll never share your email with anyone else.</small>
+                <button type="submit">Authorize</button>
+            </form>
+        </div>
+        <div id="step-2" style="display: none;">
+            <p>
+                Copy the following values and paste them into the Logseq TickTick plugin settings. Logseq will then be
+                able to request an access token.
+            </p>
+            <form>
+                <div class="grid">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td style="margin-left: 0; padding-left: 0;">TickTick Client ID</td>
+                                <td><code><span id="td_client_id"></span></code></td>
+                            </tr>
+                            <tr>
+                                <td style="margin-left: 0; padding-left: 0;">TickTick Client Secret</td>
+                                <td><code><span id="td_client_secret"></span></code></td>
+                            </tr>
+                            <tr>
+                                <td style="margin-left: 0; padding-left: 0;">TickTick Redirect URI</td>
+                                <td><code><span id="td_redirect_uri"></span></code></td>
+                            </tr>
+                            <tr>
+                                <td style="margin-left: 0; padding-left: 0;">TickTick Access Code</td>
+                                <td><code><span id="td_access_code"></span></code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+
+    </main>
+    <script>
+        const AUTH_URL = 'https://ticktick.com/oauth/authorize';
+        const TOKEN_URL = 'https://ticktick.com/oauth/token';
+
+        const form = document.querySelector('form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('submit');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            data.scope = 'tasks:write';
+            data.response_type = 'code';
+            data.state = 'ok';
+            const url = `${AUTH_URL}?${new URLSearchParams(data)}`;
+            localStorage.setItem('ticktick', JSON.stringify(data));
+            window.open(url, '_self');
+        });
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('code')) {
+            document.querySelector('#step-1').style.display = 'none';
+            document.querySelector('#step-2').style.display = 'block';
+            document.querySelector('#td_access_code').innerText = params.get('code');
+            document.querySelector('#td_client_id').innerText = JSON.parse(localStorage.getItem('ticktick')).client_id;
+            document.querySelector('#td_client_secret').innerText = JSON.parse(localStorage.getItem('ticktick')).client_secret;
+            document.querySelector('#td_redirect_uri').innerText = JSON.parse(localStorage.getItem('ticktick')).redirect_url;
+        }
+    </script>
 </body>
+
 </html>
