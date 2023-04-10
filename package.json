@@ -1,6 +1,7 @@
 {
   "name": "logseq-ticktick-plugin",
   "version": "0.0.1",
+  "description": "TickTick plugin for Logseq.",
   "main": "dist/index.html",
   "scripts": {
     "dev": "vite",
@@ -8,6 +9,11 @@
     "preinstall": "npx only-allow pnpm"
   },
   "license": "MIT",
+  "author": "Maximilian Schöll",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mxschll/logseq-ticktick-plugin"
+  },
   "dependencies": {
     "@logseq/libs": "^0.0.14",
     "moment": "^2.29.4",
