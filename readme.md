@@ -7,7 +7,7 @@ This is a plugin for [Logseq](https://logseq.com/) that allows you to create tas
 ## Features
 
 - [x] Create tasks in TickTick from Logseq
-- [x] Set the priority of the task- 
+- [x] Set the priority of the task
 - [x] Create subtasks
 
 Future features:
@@ -16,6 +16,7 @@ Future features:
 - [ ] Create tasks with reminders
 - [ ] Create tasks with tags
 - [ ] Create tasks with notes
+- [ ] OAuth2 authentication
 
 ## Installation
 
