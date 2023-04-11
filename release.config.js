@@ -1,3 +1,5 @@
+const pluginName = require('./package.json').name
+
 module.exports = {
   branches: ["master"],
   plugins: [
@@ -20,13 +22,13 @@ module.exports = {
       "@semantic-release/exec",
       {
         prepareCmd:
-          "zip -qq -r logseq-plugin-template-react-${nextRelease.version}.zip dist readme.md logo.png LICENSE package.json",
+          "zip -qq -r " + pluginName + "-${nextRelease.version}.zip dist readme.md logo.png LICENSE package.json",
       },
     ],
     [
       "@semantic-release/github",
       {
-        assets: "logseq-plugin-template-react-*.zip",
+        assets: [`${pluginName}-*.zip`],
       },
     ],
   ],

@@ -1,3 +1,33 @@
+# 1.0.0 (2023-04-11)
+
+
+### Features
+
+* add task creation via /tt ([e4467fa](https://github.com/mxschll/logseq-ticktick-plugin/commit/e4467fa4efdde0da602ddde55a42209bed63c7f9))
+* clear access token when setting are cleared ([a7ccbda](https://github.com/mxschll/logseq-ticktick-plugin/commit/a7ccbda5650df20309994038249764fb816ab606))
+* implement basic ticktick task creation ([f7c0e52](https://github.com/mxschll/logseq-ticktick-plugin/commit/f7c0e52b6fee7c6d66afade9d942e5de850d6d44))
+* ticktick oauth workaround page ([2d72e6d](https://github.com/mxschll/logseq-ticktick-plugin/commit/2d72e6d91590a4a24ea2a5eeac7b3c1880ab760c))
+
+# 1.0.0 (2023-04-11)
+
+
+### Features
+
+* add task creation via /tt ([e4467fa](https://github.com/mxschll/logseq-ticktick-plugin/commit/e4467fa4efdde0da602ddde55a42209bed63c7f9))
+* clear access token when setting are cleared ([a7ccbda](https://github.com/mxschll/logseq-ticktick-plugin/commit/a7ccbda5650df20309994038249764fb816ab606))
+* implement basic ticktick task creation ([f7c0e52](https://github.com/mxschll/logseq-ticktick-plugin/commit/f7c0e52b6fee7c6d66afade9d942e5de850d6d44))
+* ticktick oauth workaround page ([2d72e6d](https://github.com/mxschll/logseq-ticktick-plugin/commit/2d72e6d91590a4a24ea2a5eeac7b3c1880ab760c))
+
+# 1.0.0 (2023-04-10)
+
+
+### Features
+
+* add task creation via /tt ([e4467fa](https://github.com/mxschll/logseq-ticktick-plugin/commit/e4467fa4efdde0da602ddde55a42209bed63c7f9))
+* clear access token when setting are cleared ([a7ccbda](https://github.com/mxschll/logseq-ticktick-plugin/commit/a7ccbda5650df20309994038249764fb816ab606))
+* implement basic ticktick task creation ([f7c0e52](https://github.com/mxschll/logseq-ticktick-plugin/commit/f7c0e52b6fee7c6d66afade9d942e5de850d6d44))
+* ticktick oauth workaround page ([2d72e6d](https://github.com/mxschll/logseq-ticktick-plugin/commit/2d72e6d91590a4a24ea2a5eeac7b3c1880ab760c))
+
 ## [2.1.1](https://github.com/pengx17/logseq-plugin-template-react/compare/v2.1.0...v2.1.1) (2022-03-24)
 
 
