@@ -20,14 +20,14 @@ export const settingsSchema: SettingSchemaDesc[] = [
     type: 'string',
     title: 'TickTick Redirect URI',
     description: 'TickTick Redirect URI',
-    default: '',
+    default: 'https://mxschll.github.io/logseq-ticktick-plugin',
   },
   {
     key: 'access_code',
     type: 'string',
     title: 'TickTick Access Code',
     description: 'TickTick Code',
-    default: 'https://mxschll.github.io/logseq-ticktick-plugin',
+    default: '',
   },
 ];
 
