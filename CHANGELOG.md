@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/mxschll/logseq-ticktick-plugin/compare/v1.0.0...v1.0.1) (2023-04-11)
+
+
+### Bug Fixes
+
+* **api:** should close [#1](https://github.com/mxschll/logseq-ticktick-plugin/issues/1) ([0dede67](https://github.com/mxschll/logseq-ticktick-plugin/commit/0dede67d1f11f7b293c5e5edfad5954e391062aa))
+* **settings:** access_code was wrongfully prefilled ([d105925](https://github.com/mxschll/logseq-ticktick-plugin/commit/d1059251d7c24243837d19a388be623f6f4faba7))
+
 # 1.0.0 (2023-04-11)
 
 
