@@ -97,6 +97,14 @@ const main: () => Promise<void> = async () => {
   let settings = getTickTickSettings();
   ticktick.setAccessToken(settings.accessToken);
 
+  logseq.onSettingsChanged(() => {
+    const newSettings = getTickTickSettings();
+    ticktick.setAccessToken(newSettings.accessToken);
+    logseq.UI.showMsg('TickTick access token is updated.', 'success', {
+      timeout: 3000,
+    });
+  });
+
   if (settings.accessToken === '') {
     await logseq.UI.showMsg('TickTick access token is not set.', 'warning', {
       timeout: 3000,
