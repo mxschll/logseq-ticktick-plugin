@@ -54,7 +54,7 @@
             <p>
                 Copy the access token below and paste it into the Logseq plugin settings.
             </p>
-            <p>Your TickTick access token: <code><span id="td_access_token"></span></code></p>
+            <p>Your TickTick access token: <code><span id="td_access_token" aria-busy="true"></span></code></p>
             <br>
             <p>
                 <a href="index.html">Go back</a>
@@ -81,6 +81,9 @@
 
         const params = new URLSearchParams(window.location.search);
         if (params.has('code')) {
+            document.querySelector('#step-1').style.display = 'none';
+            document.querySelector('#step-2').style.display = 'block';
+
             fetch("https://ywcmjymjeeppwgdfqncs.functions.supabase.co/ticktick-auth",
                 {
                     method: "POST",
@@ -97,9 +100,8 @@
             ).then(res => res.ok ? res.json() : Promise.reject(res))
                 .then(data => {
                     console.log(data);
+                    document.querySelector('#td_access_token').setAttribute('aria-busy', 'false');
                     document.querySelector('#td_access_token').innerText = data.access_token;
-                    document.querySelector('#step-1').style.display = 'none';
-                    document.querySelector('#step-2').style.display = 'block';
                 })
                 .catch(err => {
                     console.error(err);
