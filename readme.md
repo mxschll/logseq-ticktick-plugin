@@ -26,7 +26,7 @@ Future features:
 
 ## Usage
 
-- Use the `/tt`-command to create a task in TickTick
+- Use the `/TT`-command to create a task in TickTick
 - The task's priority level is determined by the presence of `[#A]`, `[#B]`, or `[#C]` and set in TickTick accordingly where `[#A]` is the highest priority and `[#C]` is the lowest priority
 - Subtasks are automaticaly created from child blocks
 
