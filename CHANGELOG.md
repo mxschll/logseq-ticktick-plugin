@@ -1,3 +1,21 @@
+# [1.1.0](https://github.com/mxschll/logseq-ticktick-plugin/compare/v1.0.1...v1.1.0) (2023-04-12)
+
+
+### Bug Fixes
+
+* hide second step, when no token retrieved ([8fb6d9b](https://github.com/mxschll/logseq-ticktick-plugin/commit/8fb6d9b1332bb9cd5a54136617fdd917c1d0e970))
+* **settings:** use new token on settings change ([03d70d4](https://github.com/mxschll/logseq-ticktick-plugin/commit/03d70d451ad79ed2c96aa490c766c9266fc4e2d8))
+
+
+### Features
+
+* **auth:** request access token outside logseq ([3cebae7](https://github.com/mxschll/logseq-ticktick-plugin/commit/3cebae7a2d22848bdcd6d21e31d68263fa64ad14)), closes [#2](https://github.com/mxschll/logseq-ticktick-plugin/issues/2) [#1](https://github.com/mxschll/logseq-ticktick-plugin/issues/1)
+
+
+### Reverts
+
+* Revert "fix(api): should close #1" ([f7f40f0](https://github.com/mxschll/logseq-ticktick-plugin/commit/f7f40f09a4083b9c458e7b55f0437a92538984f0)), closes [#1](https://github.com/mxschll/logseq-ticktick-plugin/issues/1)
+
 ## [1.0.1](https://github.com/mxschll/logseq-ticktick-plugin/compare/v1.0.0...v1.0.1) (2023-04-11)
 
 
