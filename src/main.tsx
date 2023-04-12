@@ -103,7 +103,7 @@ const main: () => Promise<void> = async () => {
     });
   }
 
-  logseq.Editor.registerSlashCommand('tt', async () => {
+  logseq.Editor.registerSlashCommand('TT', async () => {
     const blockEntity = await logseq.Editor.getCurrentBlock();
     if (!blockEntity) {
       console.error('No block selected');
