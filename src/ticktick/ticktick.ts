@@ -12,29 +12,25 @@ class TickTick {
         }
     }
 
-    public getAccessToken(clientId: string, clientSecret: string, code: string, redirectUri: string): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', this.AUTH_URL);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onload = () => {
-                const data = JSON.parse(xhr.responseText);
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    this.accessToken = data.access_token;
-                    resolve(data.access_token);
-                } else {
-                    reject(new Error(`Failed to get access token: ${data.error_description}`));
-                }
-            };
-            xhr.onerror = () => reject(new Error("Network error getting access token"));
-            xhr.send(new URLSearchParams({
+    public async getAccessToken(clientId: string, clientSecret: string, code: string, redirectUri: string): Promise<string> {
+        const response = await fetch(this.AUTH_URL, {
+            method: 'POST',
+            body: new URLSearchParams({
                 client_id: clientId,
                 client_secret: clientSecret,
                 code,
                 redirect_uri: redirectUri,
                 grant_type: 'authorization_code'
-            }));
+            })
         });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(`Failed to get access token: ${data.error_description}`);
+        }
+
+        this.accessToken = data.access_token;
+        return data.access_token;
     }
 
     public setAccessToken(accessToken: string): void {
@@ -45,25 +41,24 @@ class TickTick {
         return `${this.WEB_URL}/#p/${encodeURIComponent(task.projectId)}/task/${encodeURIComponent(task.id)}`;
     }
 
-    public createTask(newTask: NewTask): Promise<Task> {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            const url = `${this.BASE_URL}/task`;
-            xhr.open('POST', url);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('Authorization', `Bearer ${this.accessToken}`);
-            xhr.onload = () => {
-                const data = JSON.parse(xhr.responseText);
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    data.taskUrl = this.generateTaskUrl(data);
-                    resolve(data);
-                } else {
-                    reject(new Error(`Failed to create task: ${data.error_description}`));
-                }
-            };
-            xhr.onerror = () => reject(new Error("Network error creating task"));
-            xhr.send(JSON.stringify(newTask));
+    public async createTask(newTask: NewTask): Promise<Task> {
+        const url = `${this.BASE_URL}/task`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.accessToken}`
+            },
+            body: JSON.stringify(newTask)
         });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(`Failed to create task: ${data.error_description}`);
+        }
+
+        data.taskUrl = this.generateTaskUrl(data);
+        return data;
     }
 }
 
