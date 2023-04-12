@@ -47,41 +47,19 @@
                     <input type="text" name="redirect_url" id="redirect_url" placeholder="Redirect URI"
                         value="https://mxschll.github.io/logseq-ticktick-plugin" hidden>
                 </div>
-                <small>We'll never share your email with anyone else.</small>
                 <button type="submit">Authorize</button>
             </form>
         </div>
-        <div id="step-2" style="display: none;">
+        <div id="step-2" style="display: hidden;">
             <p>
-                Copy the following values and paste them into the Logseq TickTick plugin settings. Logseq will then be
-                able to request an access token.
+                Copy the access token below and paste it into the Logseq plugin settings.
             </p>
-            <form>
-                <div class="grid">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td style="margin-left: 0; padding-left: 0;">TickTick Client ID</td>
-                                <td><code><span id="td_client_id"></span></code></td>
-                            </tr>
-                            <tr>
-                                <td style="margin-left: 0; padding-left: 0;">TickTick Client Secret</td>
-                                <td><code><span id="td_client_secret"></span></code></td>
-                            </tr>
-                            <tr>
-                                <td style="margin-left: 0; padding-left: 0;">TickTick Redirect URI</td>
-                                <td><code><span id="td_redirect_uri"></span></code></td>
-                            </tr>
-                            <tr>
-                                <td style="margin-left: 0; padding-left: 0;">TickTick Access Code</td>
-                                <td><code><span id="td_access_code"></span></code></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </form>
+            <p>Your TickTick access token: <code><span id="td_access_token"></span></code></p>
+            <br>
+            <p>
+                <a href="index.html">Go back</a>
+            </p>
         </div>
-
     </main>
     <script>
         const AUTH_URL = 'https://ticktick.com/oauth/authorize';
@@ -103,12 +81,31 @@
 
         const params = new URLSearchParams(window.location.search);
         if (params.has('code')) {
-            document.querySelector('#step-1').style.display = 'none';
-            document.querySelector('#step-2').style.display = 'block';
-            document.querySelector('#td_access_code').innerText = params.get('code');
-            document.querySelector('#td_client_id').innerText = JSON.parse(localStorage.getItem('ticktick')).client_id;
-            document.querySelector('#td_client_secret').innerText = JSON.parse(localStorage.getItem('ticktick')).client_secret;
-            document.querySelector('#td_redirect_uri').innerText = JSON.parse(localStorage.getItem('ticktick')).redirect_url;
+            fetch("https://ywcmjymjeeppwgdfqncs.functions.supabase.co/ticktick-auth",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        code: params.get('code'),
+                        client_id: JSON.parse(localStorage.getItem('ticktick')).client_id,
+                        client_secret: JSON.parse(localStorage.getItem('ticktick')).client_secret,
+                        redirect_uri: JSON.parse(localStorage.getItem('ticktick')).redirect_url,
+                    })
+                }
+            ).then(res => res.ok ? res.json() : Promise.reject(res))
+                .then(data => {
+                    console.log(data);
+                    document.querySelector('#td_access_token').innerText = data.access_token;
+                    document.querySelector('#step-1').style.display = 'none';
+                    document.querySelector('#step-2').style.display = 'block';
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+
+            document.querySelector('#td_access_token').innerText = JSON.parse(localStorage.getItem('ticktick')).access_token;
         }
     </script>
 </body>

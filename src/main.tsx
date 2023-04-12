@@ -70,46 +70,22 @@ const flattenTree: (node: BlockEntity) => BlockEntity[] = (node) => {
   return result;
 };
 
-const onSettingsChanged = async () => {
-  const settings = getTickTickSettings();
-  if (
-    settings.accessToken === '' &&
-    settings.accessCode !== '' &&
-    settings.clientId !== '' &&
-    settings.clientSecret !== '' &&
-    settings.redirectUri !== ''
-  ) {
-    const accessToken = await ticktick.getAccessToken(
-      settings.clientId,
-      settings.clientSecret,
-      settings.accessCode,
-      settings.redirectUri,
+const createTask: (task: NewTask, block: BlockEntity) => Promise<void> = async (
+  task,
+  block,
+) => {
+  try {
+    const newTask = await ticktick.createTask(task);
+    await logseq.Editor.updateBlock(
+      block.uuid,
+      `TODO ${priorityToTag(newTask.priority)}[${newTask.title}](${
+        newTask.taskUrl
+      })`,
     );
-    logseq.updateSettings({ access_token: accessToken });
-    logseq.UI.showMsg(
-      'TickTick access token updated successfully.',
-      'success',
-      {
-        timeout: 5000,
-      },
-    );
-  }
-
-  if (
-    settings.accessToken !== '' &&
-    settings.accessCode === '' &&
-    settings.clientId === '' &&
-    settings.clientSecret === '' &&
-    settings.redirectUri === ''
-  ) {
-    logseq.updateSettings({ access_token: '' });
-    logseq.UI.showMsg(
-      'TickTick access token cleared successfully.',
-      'success',
-      {
-        timeout: 5000,
-      },
-    );
+  } catch (error) {
+    await logseq.UI.showMsg('TickTick access token is invalid.', 'error', {
+      timeout: 3000,
+    });
   }
 };
 
@@ -117,11 +93,14 @@ const main: () => Promise<void> = async () => {
   console.info(`#${pluginId}: MAIN`);
 
   logseq.useSettingsSchema(settingsSchema);
-  logseq.onSettingsChanged(onSettingsChanged);
-  let settings = getTickTickSettings();
 
-  if (settings.accessToken !== '') {
-    ticktick.setAccessToken(settings.accessToken);
+  let settings = getTickTickSettings();
+  ticktick.setAccessToken(settings.accessToken);
+
+  if (settings.accessToken === '') {
+    await logseq.UI.showMsg('TickTick access token is not set.', 'warning', {
+      timeout: 3000,
+    });
   }
 
   logseq.Editor.registerSlashCommand('tt', async () => {
@@ -150,17 +129,7 @@ const main: () => Promise<void> = async () => {
     const task = parseTask(flatContentTree[0]?.content || '');
     task.items = subtasks;
 
-    try {
-      const newTask = await ticktick.createTask(task);
-      await logseq.Editor.updateBlock(
-        blockEntity.uuid,
-        `TODO ${priorityToTag(newTask.priority)}[${newTask.title}](${
-          newTask.taskUrl
-        })`,
-      );
-    } catch (error) {
-      logseq.UI.showMsg('TickTick access token is invalid.', 'error');
-    }
+    createTask(task, flatContentTree[0]);
   });
 };
 
