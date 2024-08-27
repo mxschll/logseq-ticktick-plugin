@@ -20,6 +20,8 @@ Future features:
 
 ## Installation
 
+https://github.com/user-attachments/assets/b86ae300-900f-4329-b9c9-fb2857e64e05
+
 1. Install the plugin from the marketplace or build it from source and load unpacked plugin
 2. Go to <https://mxschll.github.io/logseq-ticktick-plugin/> and follow the instructions to get your TickTick credentials
 3. Copy the credentials and paste them into the plugin settings in Logseq
