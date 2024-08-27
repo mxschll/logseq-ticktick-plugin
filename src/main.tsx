@@ -78,8 +78,7 @@ const createTask: (task: NewTask, block: BlockEntity) => Promise<void> = async (
     const newTask = await ticktick.createTask(task);
     await logseq.Editor.updateBlock(
       block.uuid,
-      `TODO ${priorityToTag(newTask.priority)}[${newTask.title}](${
-        newTask.taskUrl
+      `TODO ${priorityToTag(newTask.priority)}[${newTask.title}](${newTask.taskUrl
       })`,
     );
   } catch (error) {
@@ -125,7 +124,6 @@ const main: () => Promise<void> = async () => {
     }
 
     const flatContentTree = flattenTree(contentTree);
-    console.log(flatContentTree);
 
     const subtasks: Subtask[] = flatContentTree.slice(1).map((child) => {
       const subtask: Subtask = {
@@ -136,6 +134,13 @@ const main: () => Promise<void> = async () => {
 
     const task = parseTask(flatContentTree[0]?.content || '');
     task.items = subtasks;
+
+    if (task.title.length == 0) {
+      await logseq.UI.showMsg('Task title cannot be empty.', 'warning', {
+        timeout: 3000,
+      });
+      return;
+    }
 
     createTask(task, flatContentTree[0]);
   });
