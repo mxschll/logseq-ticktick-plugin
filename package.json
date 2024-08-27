@@ -1,6 +1,6 @@
 {
   "name": "logseq-ticktick-plugin",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "TickTick plugin for Logseq.",
   "main": "dist/index.html",
   "scripts": {
